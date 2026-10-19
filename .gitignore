@@ -1,0 +1,20 @@
+# Dependências
+node_modules/
+
+# Variáveis de ambiente e credenciais
+.env
+.env.*
+!.env.example
+
+# Arquivos temporários
+dist/
+coverage/
+*.log
+
+# Supabase local
+supabase/.branches/
+supabase/.profiles/
+supabase/.temp/
+
+# Sistema operacional
+.DS_Store
