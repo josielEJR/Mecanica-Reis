@@ -3,6 +3,7 @@ import { normalizePlaca } from '../src/schemas/veiculos.schema.js';
 import { catalogoItemInputSchema } from '../src/schemas/catalogo.schema.js';
 import { clienteInputSchema } from '../src/schemas/clientes.schema.js';
 import { DomainError, mapSupabaseError } from '../src/lib/errors.js';
+import { centsToMoney, moneyToCents } from '../src/domain/decimal.js';
 
 describe('validações da camada comercial', () => {
   it('normaliza placas para comparação e índice do banco', () => expect(normalizePlaca('abc-1d23')).toBe('ABC1D23'));
@@ -14,5 +15,10 @@ describe('validações da camada comercial', () => {
   it('mapeia códigos de integridade para erros de domínio', () => {
     expect(mapSupabaseError({ code: '23505' })).toBeInstanceOf(DomainError);
     expect(mapSupabaseError({ code: '42501' }).code).toBe('UNAUTHORIZED');
+  });
+  it('converte valores monetários sem aritmética binária', () => {
+    expect(moneyToCents('10.25')).toBe(1025n);
+    expect(centsToMoney(1025n)).toBe('10.25');
+    expect(() => moneyToCents('10.256')).toThrow();
   });
 });

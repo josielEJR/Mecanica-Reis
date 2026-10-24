@@ -7,6 +7,8 @@ const contents = [
   `SUPABASE_ANON_KEY=${status.ANON_KEY}`,
   'SUPABASE_TEST_EMAIL=mecanica-reis.integration@example.test',
   'SUPABASE_TEST_PASSWORD=Mecanica-Reis-Integration-2026!',
+  'SUPABASE_TEST_UNAUTHORIZED_EMAIL=mecanica-reis.unauthorized@example.test',
+  'SUPABASE_TEST_UNAUTHORIZED_PASSWORD=Mecanica-Reis-Unauthorized-2026!',
   '',
 ].join('\n');
 fs.writeFileSync('.env.test', contents, { mode: 0o600 });

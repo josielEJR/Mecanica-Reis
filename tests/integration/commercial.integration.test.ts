@@ -1,12 +1,23 @@
 import { randomUUID } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
 import { createSupabaseClient } from '../../src/lib/supabase.js';
+import { AuthService } from '../../src/services/auth.service.js';
 
-const configured = Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY && process.env.SUPABASE_TEST_EMAIL && process.env.SUPABASE_TEST_PASSWORD);
+const configured = Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY && process.env.SUPABASE_TEST_EMAIL && process.env.SUPABASE_TEST_PASSWORD && process.env.SUPABASE_TEST_UNAUTHORIZED_EMAIL && process.env.SUPABASE_TEST_UNAUTHORIZED_PASSWORD);
 
 describe.skipIf(!configured)('integração Supabase local (sessão e RLS reais)', () => {
   it('não expõe clientes para uma sessão anônima', async () => {
     const db = createSupabaseClient();
+    const { data, error } = await db.from('clientes').select('id').limit(1);
+    expect(error).toBeNull();
+    expect(data).toEqual([]);
+  });
+
+  it('autentica usuário sem autorização, mas mantém acesso aos dados bloqueado', async () => {
+    const db = createSupabaseClient();
+    const auth = new AuthService(db);
+    await auth.entrar(process.env.SUPABASE_TEST_UNAUTHORIZED_EMAIL!, process.env.SUPABASE_TEST_UNAUTHORIZED_PASSWORD!);
+    await expect(auth.verificarAutorizacao()).resolves.toBe(false);
     const { data, error } = await db.from('clientes').select('id').limit(1);
     expect(error).toBeNull();
     expect(data).toEqual([]);
