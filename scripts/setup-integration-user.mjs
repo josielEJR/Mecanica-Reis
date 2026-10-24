@@ -23,13 +23,13 @@ async function request(path, options = {}) {
 }
 
 const users = await request('/auth/v1/admin/users?per_page=1000');
-let user = users.users.find((candidate) => candidate.email === process.env.SUPABASE_TEST_EMAIL);
-if (!user) {
-  user = await request('/auth/v1/admin/users', {
-    method: 'POST',
-    body: JSON.stringify({ email: process.env.SUPABASE_TEST_EMAIL, password: process.env.SUPABASE_TEST_PASSWORD, email_confirm: true }),
-  });
+async function ensureUser(email, password) {
+  let user = users.users.find((candidate) => candidate.email === email);
+  if (!user) user = await request('/auth/v1/admin/users', { method: 'POST', body: JSON.stringify({ email, password, email_confirm: true }) });
+  return user;
 }
+const user = await ensureUser(process.env.SUPABASE_TEST_EMAIL, process.env.SUPABASE_TEST_PASSWORD);
+await ensureUser(process.env.SUPABASE_TEST_UNAUTHORIZED_EMAIL, process.env.SUPABASE_TEST_UNAUTHORIZED_PASSWORD);
 
 await request('/rest/v1/oficina_autorizados?on_conflict=user_id', {
   method: 'POST',

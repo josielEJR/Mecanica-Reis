@@ -31,7 +31,7 @@ npm run build
 
 Para configurar um usuário local, crie-o no Auth e insira seu UUID em `oficina_autorizados` usando o SQL Editor/credencial de serviço. Nunca versionar credenciais; use `.env.example` como referência. A camada comercial está em `src/repositories`, `src/services`, `src/schemas` e `src/types`.
 
-Comandos adicionais: `npm run test:unit`, `npm run test:integration`, `npm run db:test` e `npm run db:types`. Os testes de integração só são habilitados quando `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_TEST_EMAIL` e `SUPABASE_TEST_PASSWORD` são fornecidos para um ambiente de desenvolvimento descartável.
+Comandos adicionais: `npm run test:unit`, `npm run test:integration`, `npm run db:test`, `npm run db:integration:setup` e `npm run db:types`. Os testes de integração usam somente o Supabase local e o arquivo `.env.test` ignorado pelo Git. A ETAPA 03 adiciona `AuthService`, recebimentos líquidos/idempotentes, estornos auditáveis, despesas protegidas por RPC e consultas de dashboard/devedores.
 
 ## Desenvolvimento
 

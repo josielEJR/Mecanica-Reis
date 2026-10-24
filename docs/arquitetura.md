@@ -7,3 +7,5 @@ As entidades são normalizadas e usam UUID, `timestamptz` e `numeric(12,2)`. Ite
 Recebimentos são inseridos exclusivamente pela RPC `adicionar_recebimento`, que valida o usuário, bloqueia a ordem com `FOR UPDATE` e compara o novo valor ao saldo dentro da mesma transação. A conversão comercial usa a RPC `converter_orcamento_em_ordem`, também com `SECURITY DEFINER`, lock do orçamento e cópia atômica dos snapshots.
 
 A camada TypeScript separa schemas Zod, repositories e services. Os repositories não usam `service_role`; o cliente usa a chave anônima e a sessão do usuário, deixando RLS como última autoridade.
+
+Na ETAPA 03, recebimentos e despesas sensíveis são gravados por RPCs `SECURITY DEFINER` com `search_path = public`, validação de autorização e locks transacionais. Consultas de dashboard e devedores são `SECURITY INVOKER`, portanto continuam sujeitas ao RLS.

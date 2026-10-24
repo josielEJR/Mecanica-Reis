@@ -21,15 +21,23 @@ export interface Database {
       orcamento_itens: Entity<{ id: UUID; orcamento_id: UUID; catalogo_item_id: UUID | null; tipo: CatalogoItemTipo; descricao: string; quantidade: number; custo_unitario: number; preco_unitario: number } & Timestamps>;
       ordens_servico: Entity<{ id: UUID; numero: number; orcamento_id: UUID | null; cliente_id: UUID; veiculo_id: UUID; descricao_problema: string; diagnostico: string | null; descricao_servico: string | null; observacoes: string | null; status: OrdemStatus; desconto: number; data_entrada: string; data_conclusao: string | null } & Timestamps>;
       ordem_servico_itens: Entity<{ id: UUID; ordem_servico_id: UUID; catalogo_item_id: UUID | null; tipo: CatalogoItemTipo; descricao: string; quantidade: number; custo_unitario: number; preco_unitario: number } & Timestamps>;
-      recebimentos: Entity<{ id: UUID; ordem_servico_id: UUID; valor: number; recebido_em: string; observacoes: string | null; estorno_de: UUID | null; created_at: string }>;
-      despesas: Entity<{ id: UUID; ordem_servico_id: UUID | null; categoria: DespesaCategoria; descricao: string; valor: number; data_competencia: string; pago_em: string | null; observacoes: string | null } & Timestamps>;
+      recebimentos: Entity<{ id: UUID; ordem_servico_id: UUID; valor: number; recebido_em: string; observacoes: string | null; estorno_de: UUID | null; idempotency_key: string | null; created_at: string }>;
+      despesas: Entity<{ id: UUID; ordem_servico_id: UUID | null; categoria: DespesaCategoria; descricao: string; valor: number; data_competencia: string; pago_em: string | null; observacoes: string | null; cancelada_em: string | null; cancelamento_motivo: string | null } & Timestamps>;
     };
     Views: {
       ordem_financeiro: { Row: { id: UUID; numero: number; cliente_id: UUID; veiculo_id: UUID; status: OrdemStatus; desconto: number; data_entrada: string; data_conclusao: string | null; subtotal: number; total: number; custo_itens: number; total_recebido: number; saldo_pendente: number; status_financeiro: 'NAO_RECEBIDO' | 'PARCIAL' | 'QUITADO' } };
     };
     Functions: {
       adicionar_recebimento: { Args: { p_ordem_servico_id: UUID; p_valor: number; p_recebido_em?: string; p_observacoes?: string | null }; Returns: Database['public']['Tables']['recebimentos']['Row'] };
+      estornar_recebimento: { Args: { p_recebimento_id: UUID; p_estornado_em?: string; p_observacoes?: string | null }; Returns: Database['public']['Tables']['recebimentos']['Row'] };
+      marcar_despesa_paga: { Args: { p_despesa_id: UUID; p_pago_em?: string }; Returns: Database['public']['Tables']['despesas']['Row'] };
+      cancelar_despesa: { Args: { p_despesa_id: UUID; p_motivo: string }; Returns: Database['public']['Tables']['despesas']['Row'] };
+      cadastrar_despesa: { Args: { p_ordem_servico_id?: UUID | null; p_categoria: DespesaCategoria; p_descricao: string; p_valor: number; p_data_competencia: string; p_observacoes?: string | null }; Returns: Database['public']['Tables']['despesas']['Row'] };
+      atualizar_despesa: { Args: { p_despesa_id: UUID; p_descricao?: string | null; p_valor?: number | null; p_data_competencia?: string | null; p_observacoes?: string | null }; Returns: Database['public']['Tables']['despesas']['Row'] };
+      usuario_autorizado: { Args: Record<string, never>; Returns: boolean };
       converter_orcamento_em_ordem: { Args: { p_orcamento_id: UUID }; Returns: UUID };
+      listar_clientes_devedores: { Args: { p_busca?: string | null; p_limite?: number; p_offset?: number }; Returns: Array<Record<string, unknown>> };
+      dashboard_resumo_financeiro: { Args: { p_inicio: string; p_fim: string; p_cliente_id?: UUID | null; p_veiculo_id?: UUID | null; p_categoria?: DespesaCategoria | null; p_situacao?: string | null }; Returns: Array<Record<string, number>> };
       dashboard_financeiro: { Args: { p_inicio: string; p_fim: string }; Returns: Array<Record<string, number>> };
     };
   };

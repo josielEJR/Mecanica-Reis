@@ -13,3 +13,5 @@ const cliente = await clientes.cadastrarCliente({ nome: 'João da Silva', telefo
 ```
 
 As classes em `src/repositories` fazem apenas acesso ao Supabase. As classes em `src/services` validam entrada, coordenam fluxos e traduzem erros para `DomainError`. Regras financeiras críticas continuam no PostgreSQL.
+
+Para o financeiro, use `RecebimentosService` para registrar/estornar lançamentos com chave idempotente, `DespesasService` para criar, pagar e cancelar despesas e `DashboardService` para resumos, devedores e fluxo de caixa. Valores aceitos pelos schemas financeiros podem ser strings decimais, como `'125.90'`; o domínio converte-os para centavos antes de enviá-los ao banco.
