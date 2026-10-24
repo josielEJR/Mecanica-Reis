@@ -2,16 +2,38 @@
   "name": "mecanica-reis",
   "version": "1.0.0",
   "description": "",
+  "engines": {
+    "node": ">=18.18.0"
+  },
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:unit": "vitest run tests/finance.test.ts tests/services.test.ts",
+    "test:integration": "vitest run tests/integration",
+    "typecheck": "tsc --noEmit",
+    "db:reset": "npx supabase db reset",
+    "db:test": "npx supabase test db",
+    "db:types": "npx supabase gen types typescript --local > src/types/database.generated.ts",
+    "db:integration:env": "node scripts/prepare-integration-env.mjs",
+    "db:integration:setup": "npm run db:integration:env && node scripts/setup-integration-user.mjs"
   },
-  "keywords": [],
+  "keywords": [
+    "supabase",
+    "postgresql",
+    "typescript"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/node": "^26.6.5",
     "supabase": "^2.121.0",
     "typescript": "^7.0.2",
-    "vitest": "^5.0.5"
+    "vitest": "^2.1.9"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.118.0",
+    "zod": "^3.25.76"
   }
 }
