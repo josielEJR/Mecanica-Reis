@@ -1,5 +1,7 @@
 # Dependências
 node_modules/
+dist-web/
+apps/web/.env.local
 
 # Variáveis de ambiente e credenciais
 .env
