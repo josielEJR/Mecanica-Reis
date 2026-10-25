@@ -21,7 +21,7 @@ export interface Database {
       orcamento_itens: Entity<{ id: UUID; orcamento_id: UUID; catalogo_item_id: UUID | null; tipo: CatalogoItemTipo; descricao: string; quantidade: number; custo_unitario: number; preco_unitario: number } & Timestamps>;
       ordens_servico: Entity<{ id: UUID; numero: number; orcamento_id: UUID | null; cliente_id: UUID; veiculo_id: UUID; descricao_problema: string; diagnostico: string | null; descricao_servico: string | null; observacoes: string | null; status: OrdemStatus; desconto: number; data_entrada: string; data_conclusao: string | null } & Timestamps>;
       ordem_servico_itens: Entity<{ id: UUID; ordem_servico_id: UUID; catalogo_item_id: UUID | null; tipo: CatalogoItemTipo; descricao: string; quantidade: number; custo_unitario: number; preco_unitario: number } & Timestamps>;
-      recebimentos: Entity<{ id: UUID; ordem_servico_id: UUID; valor: number; recebido_em: string; observacoes: string | null; estorno_de: UUID | null; idempotency_key: string | null; created_at: string }>;
+      recebimentos: Entity<{ id: UUID; numero: number; ordem_servico_id: UUID; valor: number; recebido_em: string; observacoes: string | null; estorno_de: UUID | null; idempotency_key: string | null; created_at: string }>;
       despesas: Entity<{ id: UUID; ordem_servico_id: UUID | null; categoria: DespesaCategoria; descricao: string; valor: number; data_competencia: string; pago_em: string | null; observacoes: string | null; cancelada_em: string | null; cancelamento_motivo: string | null } & Timestamps>;
     };
     Views: {

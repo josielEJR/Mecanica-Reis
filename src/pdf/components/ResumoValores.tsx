@@ -1,0 +1,3 @@
+import { Text, View } from '@react-pdf/renderer';
+import { formatarMoeda } from '../formatters/moeda.js';
+export function ResumoValores({ desconto, total }: { desconto: string; total: string }) { return <View style={{ marginTop: 14, alignSelf: 'flex-end', width: 220, borderTop: '1pt solid #244d70', paddingTop: 6 }}><View style={{ flexDirection: 'row', justifyContent: 'space-between', fontSize: 9 }}><Text>Desconto</Text><Text>{formatarMoeda(desconto)}</Text></View><View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5, fontSize: 13, fontWeight: 700, color: '#244d70' }}><Text>Total</Text><Text>{formatarMoeda(total)}</Text></View></View>; }

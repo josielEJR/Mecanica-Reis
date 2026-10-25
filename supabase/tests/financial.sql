@@ -1,6 +1,6 @@
 -- Executar com `supabase db test` após iniciar o stack local.
 begin;
-select plan(16);
+select plan(17);
 select has_table('public', 'clientes', 'clientes existe');
 select has_table('public', 'ordens_servico', 'ordens_servico existe');
 select has_table('public', 'recebimentos', 'recebimentos existe');
@@ -10,6 +10,7 @@ select has_function('public', 'adicionar_recebimento', array['uuid', 'numeric', 
 select has_function('public', 'dashboard_financeiro', array['date', 'date'], 'dashboard existe');
 select has_function('public', 'converter_orcamento_em_ordem', array['uuid'], 'RPC de conversão existe');
 select has_column('public', 'veiculos', 'ativo', 'arquivamento lógico de veículo');
+select has_column('public', 'recebimentos', 'numero', 'numeração de recibo');
 select ok((select relrowsecurity from pg_class where oid = 'public.clientes'::regclass), 'RLS de clientes habilitado');
 select has_function('public', 'estornar_recebimento', array['uuid', 'timestamp with time zone', 'text'], 'RPC de estorno existe');
 select has_function('public', 'cadastrar_despesa', array['uuid', 'despesa_categoria', 'text', 'numeric', 'date', 'text'], 'RPC de despesa existe');

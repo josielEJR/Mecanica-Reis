@@ -1,0 +1,2 @@
+export function formatarData(value: string | Date | null | undefined): string { if (!value) return '—'; return new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo' }).format(new Date(value)); }
+export function formatarDataHora(value: string | Date | null | undefined): string { if (!value) return '—'; return new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short', timeZone: 'America/Sao_Paulo' }).format(new Date(value)); }

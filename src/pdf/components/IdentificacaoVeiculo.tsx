@@ -1,0 +1,3 @@
+import { Text, View } from '@react-pdf/renderer';
+import type { ClientePdf, VeiculoPdf } from '../types/pdf.types.js';
+export function IdentificacaoVeiculo({ cliente, veiculo }: { cliente: ClientePdf; veiculo: VeiculoPdf }) { return <View style={{ border: '1pt solid #d5dbe1', padding: 8, marginBottom: 10 }}><Text style={{ fontSize: 10, fontWeight: 700, color: '#244d70', marginBottom: 4 }}>CLIENTE E VEÍCULO</Text><Text style={{ fontSize: 9 }}>Cliente: {cliente.nome}{cliente.telefone ? ` · ${cliente.telefone}` : ''}</Text><Text style={{ fontSize: 9 }}>Veículo: {veiculo.marca} {veiculo.modelo}{veiculo.placa ? ` · Placa ${veiculo.placa}` : ''}{veiculo.ano ? ` · ${veiculo.ano}` : ''}{veiculo.cor ? ` · ${veiculo.cor}` : ''}</Text></View>; }
