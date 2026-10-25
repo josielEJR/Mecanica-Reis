@@ -1,0 +1,4 @@
+export function formatarMoeda(value: string | number): string { return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(typeof value === 'string' ? Number(value) : value).replace(/\u00a0/g, ' '); }
+export function parseCents(value: string | number): bigint { const raw = String(value); const [whole = '0', fraction = ''] = raw.split('.'); return BigInt(whole) * 100n + BigInt(fraction.padEnd(2, '0').slice(0, 2)); }
+export function centsToMoney(cents: bigint): string { return `${cents / 100n}.${(cents % 100n).toString().padStart(2, '0')}`; }
+export function lineSubtotal(quantity: string | number, unitPrice: string | number): string { const q = String(quantity); const [whole = '0', fraction = ''] = q.split('.'); const milli = BigInt(whole) * 1000n + BigInt(fraction.padEnd(3, '0').slice(0, 3)); const cents = parseCents(unitPrice); return centsToMoney((milli * cents + 500n) / 1000n); }
