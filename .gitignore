@@ -12,6 +12,8 @@ apps/web/.env.local
 dist/
 coverage/
 *.log
+playwright-report/
+test-results/
 
 # Supabase local
 supabase/.branches/

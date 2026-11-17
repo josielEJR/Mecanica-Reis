@@ -21,7 +21,10 @@
     "pdf:examples": "GENERATE_PDF_EXAMPLES=1 vitest run tests/pdf/pdf.test.tsx",
     "web:dev": "vite --config apps/web/vite.config.ts",
     "web:build": "tsc -p apps/web/tsconfig.json && vite build --config apps/web/vite.config.ts",
-    "web:preview": "vite preview --config apps/web/vite.config.ts"
+    "web:preview": "vite preview --config apps/web/vite.config.ts",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:report": "playwright show-report playwright-report"
   },
   "keywords": [
     "supabase",
@@ -31,6 +34,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@playwright/test": "^1.65.0",
     "@types/node": "^26.6.5",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",

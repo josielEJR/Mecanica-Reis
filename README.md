@@ -36,3 +36,12 @@ Comandos adicionais: `npm run test:unit`, `npm run test:integration`, `npm run d
 ## Desenvolvimento
 
 Projeto desenvolvido em etapas com auxílio do Codex.
+# Validação E2E
+
+Os testes de navegador são executados contra o Vite e o Supabase local:
+
+```bash
+npm run test:e2e
+```
+
+A configuração, cenários e dependências nativas estão documentados em [docs/homologacao.md](docs/homologacao.md). Não execute essa suíte contra produção.
