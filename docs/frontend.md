@@ -24,3 +24,6 @@ O build de produção é `npm run web:build` e gera `dist-web/`. A chave `servic
 ## Estado atual
 
 Estão disponíveis login, navegação, início com indicadores reais, clientes com pesquisa, serviços/ordens, financeiro e páginas de catálogo/configurações. Os formulários completos de criação/edição, recebimento, despesas e integração visual dos PDFs devem ser conectados aos services existentes na próxima iteração da Etapa 05; as rotas já estão preparadas sem simular gravações ou documentos.
+# PDFs e instalação
+
+Os botões de PDF ficam nos detalhes de orçamento, ordem e recebimentos. A geração ocorre no navegador com dados consultados pelo Supabase autenticado; os bytes não são armazenados em bucket público. A aplicação possui manifesto em `apps/web/public/manifest.webmanifest` e usa a logo JPEG como ícone. Não há sincronização offline de operações financeiras.

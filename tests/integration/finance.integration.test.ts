@@ -32,16 +32,34 @@ describe.skipIf(!configured)('integração financeira Supabase local', () => {
   it('separa despesa pendente, despesa paga e fluxo de caixa', async () => {
     const db = createSupabaseClient();
     expect((await db.auth.signInWithPassword({ email: process.env.SUPABASE_TEST_EMAIL!, password: process.env.SUPABASE_TEST_PASSWORD! })).error).toBeNull();
-    const today = new Date().toISOString().slice(0, 10);
-    const pending = await db.rpc('cadastrar_despesa', { p_ordem_servico_id: null, p_categoria: 'DESPESA_GERAL', p_descricao: 'Aluguel de teste', p_valor: '30.00', p_data_competencia: today, p_observacoes: null });
+    // Datas fixas evitam a virada UTC/Brasília durante a execução do teste.
+    // A função SQL interpreta [p_inicio, p_fim + 1 dia) em America/Sao_Paulo.
+    const today = '2099-01-15';
+    const paidAt = '2099-01-15T12:00:00-03:00';
+    const before = (await db.rpc('dashboard_resumo_financeiro', { p_inicio: today, p_fim: today })).data?.[0];
+    expect(before).toBeTruthy();
+
+    const pending = await db.rpc('cadastrar_despesa', { p_ordem_servico_id: null, p_categoria: 'DESPESA_GERAL', p_descricao: `Aluguel de teste ${randomUUID()}`, p_valor: '30.00', p_data_competencia: today, p_observacoes: null });
     expect(pending.error).toBeNull();
-    const paid = await db.rpc('cadastrar_despesa', { p_ordem_servico_id: null, p_categoria: 'DESPESA_GERAL', p_descricao: 'Energia de teste', p_valor: '20.00', p_data_competencia: today, p_observacoes: null });
+    expect(pending.data?.id).toBeTruthy();
+    const paid = await db.rpc('cadastrar_despesa', { p_ordem_servico_id: null, p_categoria: 'DESPESA_GERAL', p_descricao: `Energia de teste ${randomUUID()}`, p_valor: '20.00', p_data_competencia: today, p_observacoes: null });
     expect(paid.error).toBeNull();
-    const paidResult = await db.rpc('marcar_despesa_paga', { p_despesa_id: paid.data!.id, p_pago_em: null });
+    expect(paid.data?.id).toBeTruthy();
+    const paidResult = await db.rpc('marcar_despesa_paga', { p_despesa_id: paid.data!.id, p_pago_em: paidAt });
     expect(paidResult.error).toBeNull();
+    expect(paidResult.data?.id).toBe(paid.data?.id);
+    expect(paidResult.data?.pago_em).toBeTruthy();
+    expect(new Date(paidResult.data!.pago_em!).toISOString()).toBe(new Date(paidAt).toISOString());
+
+    const storedPaid = (await db.from('despesas').select('id, valor, pago_em, cancelada_em').eq('id', paid.data!.id).single());
+    expect(storedPaid.error).toBeNull();
+    expect(storedPaid.data).toMatchObject({ id: paid.data!.id, valor: 20, cancelada_em: null });
+    expect(new Date(storedPaid.data!.pago_em!).toISOString()).toBe(new Date(paidAt).toISOString());
+
     const summary = (await db.rpc('dashboard_resumo_financeiro', { p_inicio: today, p_fim: today })).data?.[0];
     expect(summary).toBeTruthy();
-    expect(Number(summary?.despesas_pagas)).toBeGreaterThanOrEqual(20);
-    expect(Number(summary?.despesas_pendentes)).toBeGreaterThanOrEqual(30);
+    expect(Number(summary.despesas_pagas) - Number(before.despesas_pagas)).toBe(20);
+    expect(Number(summary.despesas_pendentes) - Number(before.despesas_pendentes)).toBe(30);
+    expect(Number(summary.fluxo_caixa_realizado) - Number(before.fluxo_caixa_realizado)).toBe(-20);
   });
 });

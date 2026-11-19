@@ -7,11 +7,14 @@ apps/web/.env.local
 .env
 .env.*
 !.env.example
+!apps/web/.env.example
 
 # Arquivos temporários
 dist/
 coverage/
 *.log
+playwright-report/
+test-results/
 
 # Supabase local
 supabase/.branches/

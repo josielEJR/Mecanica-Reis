@@ -24,3 +24,8 @@ npm run pdf:examples
 ```
 
 Os arquivos são gravados em `examples/pdf/` e não consultam o Supabase. Em uma futura aplicação React/PWA, o mesmo `PdfService` pode ser chamado por uma camada de download sem alterar os templates.
+# Integração web
+
+As telas web usam `apps/web/src/pdf.tsx`. Esse adaptador consulta os registros pelo cliente Supabase autenticado, reutiliza os templates da pasta `src/pdf/templates` e chama `pdf(...).toBlob()` no navegador. O `PdfService` Node continua reservado para uso seguro fora do bundle.
+
+Orçamentos e ordens exibem ações de visualizar, baixar e compartilhar. Na seção financeira, recebimentos válidos possuem ação de recibo individual e a ordem possui demonstrativo. Lançamentos estornados não oferecem recibo válido. A visualização usa uma URL temporária em um modal e não altera dados no banco.
